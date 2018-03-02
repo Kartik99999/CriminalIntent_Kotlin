@@ -1,4 +1,4 @@
-package com.kartik.criminalintent.Fragments
+package com.kartik.criminalintent.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -23,8 +23,8 @@ class CrimeListFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
 
-        mCrimeRecyclerView= view.findViewById(R.id.crimeRecyclerView)
-        mCrimeRecyclerView.layoutManager=LinearLayoutManager(activity)
+        mCrimeRecyclerView = view.findViewById(R.id.crimeRecyclerView)
+        mCrimeRecyclerView.layoutManager = LinearLayoutManager(activity)
         updateUI()
 
         return view
@@ -83,69 +83,3 @@ class CrimeListFragment : Fragment() {
         }
     }
 }
-
-/*package com.kartik.criminalintent.Fragments
-
-
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-
-import com.kartik.criminalintent.R
-import com.kartik.criminalintent.dataClass.Crime
-import com.kartik.criminalintent.dataClass.CrimeLab
-import kotlinx.android.synthetic.main.fragment_crime_list.*
-
-
-class CrimeListFragment : Fragment() {
-
-    private lateinit var adapter:CrimeAdapter
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreate(savedInstanceState)
-        updateUI()
-        return inflater.inflate(R.layout.fragment_crime_list, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        crimeRecyclerView.layoutManager = LinearLayoutManager(activity)
-
-    }
-
-
-    private fun updateUI() {
-        val crimeLab=CrimeLab.get(activity?.applicationContext)
-        val crimes:ArrayList<Crime> = crimeLab.crimes
-
-        adapter=CrimeAdapter(crimes)
-        crimeRecyclerView.adapter=adapter
-    }
-
-    private inner class CrimeHolder(inflater: LayoutInflater, parent: ViewGroup?) :
-            RecyclerView.ViewHolder(inflater.inflate(R.layout.supporting_list_item_crime, parent, false))
-
-    private inner class CrimeAdapter : RecyclerView.Adapter<CrimeHolder> {
-        private lateinit var mCrimes:List<Crime>
-        constructor(crimes: List<Crime>){
-            mCrimes=crimes
-        }
-        override fun onBindViewHolder(holder: CrimeHolder?, position: Int) {
-
-        }
-
-        override fun getItemCount(): Int {
-            return mCrimes.size
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CrimeHolder {
-            val layoutInflater=LayoutInflater.from(activity)
-            return CrimeHolder(layoutInflater,parent)
-        }
-
-    }
-
-}
-*/
