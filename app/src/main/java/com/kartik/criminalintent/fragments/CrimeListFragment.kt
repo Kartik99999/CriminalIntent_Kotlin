@@ -1,5 +1,6 @@
 package com.kartik.criminalintent.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -7,10 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 
 import android.widget.Toast
 import com.bignerdranch.android.criminalintent.CrimeLab
+import com.kartik.criminalintent.CriminalActivity
 import com.kartik.criminalintent.R
 
 import com.kartik.criminalintent.dataClass.Crime
@@ -58,28 +61,29 @@ class CrimeListFragment : Fragment() {
     private inner class CrimeHolder(inflater: LayoutInflater, parent: ViewGroup)
         : RecyclerView.ViewHolder(inflater.inflate(R.layout.list_item_crime, parent, false)), View.OnClickListener {
 
-        private var mCrime: Crime? = null
-
-        private val mTitleTextView: TextView
-        private val mDateTextView: TextView
+        private lateinit var singleCrime: Crime
+        private val titleTV: TextView = itemView.findViewById(R.id.crime_title)
+        private val dateTV: TextView = itemView.findViewById(R.id.crime_date)
+        private val crimeSolvedIV: ImageView = itemView.findViewById(R.id.crime_solved)
 
         init {
             itemView.setOnClickListener(this)
-
-            mTitleTextView = itemView.findViewById(R.id.crime_title)
-            mDateTextView = itemView.findViewById(R.id.crime_date)
         }
 
         fun bind(crime: Crime) {
-            mCrime = crime
-            mTitleTextView.text = mCrime!!.title
-            mDateTextView.text = mCrime!!.date.toString()
+            singleCrime = crime
+            titleTV.text = singleCrime.title
+            dateTV.text = singleCrime.date.toString()
+            crimeSolvedIV.visibility=when (singleCrime.solved) {
+                true->View.VISIBLE
+                false->View.GONE
+            }
+
         }
 
         override fun onClick(view: View) {
-            Toast.makeText(activity,
-                    mCrime!!.title + " clicked!", Toast.LENGTH_SHORT)
-                    .show()
+            val intent=CriminalActivity.newIntent(activity!!,singleCrime.id)
+            startActivity(intent)
         }
     }
 }

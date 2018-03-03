@@ -1,5 +1,4 @@
 package com.kartik.criminalintent.dataClass
-
 import java.util.*
 
 /**
