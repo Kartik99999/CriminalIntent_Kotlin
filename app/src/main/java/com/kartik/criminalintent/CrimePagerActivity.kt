@@ -57,3 +57,10 @@ class CrimePagerActivity : AppCompatActivity() {
         }
     }
 }
+/*Difference between FragmentStatePagerAdapter and FragmentPagerAdapter
+* FragmentStatePagerAdapter uses remove method for fragment internally
+* but FragmentPagerAdapter uses detach method
+* So FragmentStatePagerAdapter doesn't have fragement when not in use but FragmentPagerAdapter will have fragments is memory
+*
+* So in short if less pages uses FragmentPagerAdapter it will take more memory but works good as no need to create Fragement again
+* But if too many fragments use FragmentStatePagerAdapter it will take less memory and create fragment as required*/
