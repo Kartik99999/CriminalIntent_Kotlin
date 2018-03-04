@@ -1,6 +1,5 @@
 package com.kartik.criminalintent.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -11,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 
-import android.widget.Toast
 import com.bignerdranch.android.criminalintent.CrimeLab
+import com.kartik.criminalintent.CrimePagerActivity
 import com.kartik.criminalintent.CriminalActivity
 import com.kartik.criminalintent.R
 
@@ -20,7 +19,8 @@ import com.kartik.criminalintent.dataClass.Crime
 
 class CrimeListFragment : Fragment() {
     private lateinit var mCrimeRecyclerView: RecyclerView
-    private lateinit var mAdapter: CrimeAdapter
+    private var mAdapter: CrimeAdapter? = null
+    private var lastUpdatedPosition = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -33,12 +33,25 @@ class CrimeListFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
+
     private fun updateUI() {
         val crimeLab = CrimeLab[context!!]
         val crimes = crimeLab.crimes
 
-        mAdapter = CrimeAdapter(crimes)
-        mCrimeRecyclerView.adapter = mAdapter
+        if (mAdapter == null) {
+            mAdapter = CrimeAdapter(crimes)
+            mCrimeRecyclerView.adapter = mAdapter
+        } else {
+            if (lastUpdatedPosition > -1) {
+                mAdapter?.notifyItemChanged(lastUpdatedPosition)
+                lastUpdatedPosition = -1
+            } else
+                mAdapter?.notifyDataSetChanged()
+        }
     }
 
     private inner class CrimeAdapter(private val mCrimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
@@ -74,15 +87,17 @@ class CrimeListFragment : Fragment() {
             singleCrime = crime
             titleTV.text = singleCrime.title
             dateTV.text = singleCrime.date.toString()
-            crimeSolvedIV.visibility=when (singleCrime.solved) {
-                true->View.VISIBLE
-                false->View.GONE
+            crimeSolvedIV.visibility = when (singleCrime.solved) {
+                true -> View.VISIBLE
+                false -> View.GONE
             }
 
         }
 
         override fun onClick(view: View) {
-            val intent=CriminalActivity.newIntent(activity!!,singleCrime.id)
+            lastUpdatedPosition = this@CrimeHolder.adapterPosition
+
+            val intent = CrimePagerActivity.newIntent(activity!!, singleCrime.id)
             startActivity(intent)
         }
     }
