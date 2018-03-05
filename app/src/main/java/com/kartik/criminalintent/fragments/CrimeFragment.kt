@@ -1,5 +1,7 @@
 package com.kartik.criminalintent.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -42,7 +44,7 @@ class CrimeFragment : Fragment() {
             }
         })
 
-        crimeDateButton.text = crime.date.toString()
+        updateDate()
         //crimeDateButton.isEnabled = false
         //now button will be implemented to set date
         crimeDateButton.setOnClickListener {
@@ -67,6 +69,20 @@ class CrimeFragment : Fragment() {
 
         crimeSolvedCheckBox.isChecked = crime.solved
         crimeSolvedCheckBox.setOnCheckedChangeListener { compoundButton, b -> crime.solved = b }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode!= Activity.RESULT_OK)
+            return
+        if (requestCode == REQUEST_DATE) {
+            val date=data?.getSerializableExtra(DatePickerFragment.EXTRA_DATE) as Date
+            crime.date=date
+            updateDate()
+
+        }
+    }
+
+    private fun updateDate() {
+        crimeDateButton.text = crime.date.toString()
     }
 
     companion object {

@@ -1,8 +1,11 @@
 package com.kartik.criminalintent.fragments
 
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
@@ -29,14 +32,31 @@ class DatePickerFragment : DialogFragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_date, null)
         datePicker = view.findViewById(R.id.dialog_date_picker)
-        datePicker.init(year,month,day,null)
+        datePicker.init(year, month, day, null)
 
-        return AlertDialog.Builder(activity).setView(view).setTitle(R.string.date_picker_title)
-                .setPositiveButton(android.R.string.ok, null)
+        return AlertDialog.Builder(activity)
+                .setView(view)
+                .setTitle(R.string.date_picker_title)
+                .setPositiveButton(
+                        android.R.string.ok
+                ) { dialog, which ->
+                    val year = datePicker.year
+                    val month = datePicker.month
+                    val day = datePicker.dayOfMonth
+                    val date = GregorianCalendar(year, month, day).time
+                    sendResult(Activity.RESULT_OK, date)
+                }
                 .create()
     }
 
+    private fun sendResult(resultCode: Int, date: Date) {
+        val intent = Intent()
+        intent.putExtra(EXTRA_DATE, date)
+        targetFragment?.onActivityResult(targetRequestCode, resultCode, intent)
+    }
+
     companion object {
+        const val EXTRA_DATE = "date from DatePickerFragment"
         private const val ARG_DATE = "date"
         public fun newInstance(date: Date): DatePickerFragment {
             val args = Bundle()
