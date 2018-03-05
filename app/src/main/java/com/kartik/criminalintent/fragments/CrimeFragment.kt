@@ -20,7 +20,7 @@ class CrimeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
-        val crimeID =arguments?.getSerializable(ARG_CRIME_ID)
+        val crimeID = arguments?.getSerializable(ARG_CRIME_ID)
         crime = CrimeLab[activity!!].getCrime(crimeID as UUID)!!
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_crime, container, false)
@@ -43,13 +43,21 @@ class CrimeFragment : Fragment() {
         })
 
         crimeDateButton.text = crime.date.toString()
-        crimeDateButton.isEnabled = false
+        //crimeDateButton.isEnabled = false
+        //now button will be implemented to set date
+        crimeDateButton.setOnClickListener {
+            val manager = fragmentManager
+            val dialog = DatePickerFragment()
+            dialog.show(manager, DIALOG_DATE)
+        }
 
         crimeSolvedCheckBox.isChecked = crime.solved
         crimeSolvedCheckBox.setOnCheckedChangeListener { compoundButton, b -> crime.solved = b }
     }
+
     companion object {
         private const val ARG_CRIME_ID = "crime_id from CrimeFragment"
+        private const val DIALOG_DATE = "DialogDate"
         fun newInstance(crimeID: UUID): CrimeFragment {
             val args = Bundle()
             args.putSerializable(ARG_CRIME_ID, crimeID)
