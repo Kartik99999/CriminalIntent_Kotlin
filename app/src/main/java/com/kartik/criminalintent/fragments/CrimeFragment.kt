@@ -47,7 +47,21 @@ class CrimeFragment : Fragment() {
         //now button will be implemented to set date
         crimeDateButton.setOnClickListener {
             val manager = fragmentManager
-            val dialog = DatePickerFragment()
+            val dialog = DatePickerFragment.newInstance(crime.date)
+//            With activities, you call startActivityForResult(…), and the ActivityManager keeps track of the
+//            parent-child activity relationship. When the child activity dies, the ActivityManager knows which
+//            activity should receive the result.
+
+            /*You can create a similar connection by making CrimeFragment the target fragment of
+            DatePickerFragment. This connection is automatically reestablished after both CrimeFragment and
+            DatePickerFragment are destroyed and re-created by the OS. To create this relationship, you call the
+            following Fragment method:
+                public void setTargetFragment(Fragment fragment, int requestCode)*/
+            //The target fragment can use the request code later to identify which fragment is reporting back.
+
+            /*The FragmentManager keeps track of the target fragment and request code. You can retrieve them by
+            calling getTargetFragment() and getTargetRequestCode() on the fragment that has set the target.*/
+            dialog.setTargetFragment(this@CrimeFragment, REQUEST_DATE)
             dialog.show(manager, DIALOG_DATE)
         }
 
@@ -56,6 +70,7 @@ class CrimeFragment : Fragment() {
     }
 
     companion object {
+        private const val REQUEST_DATE = 1
         private const val ARG_CRIME_ID = "crime_id from CrimeFragment"
         private const val DIALOG_DATE = "DialogDate"
         fun newInstance(crimeID: UUID): CrimeFragment {

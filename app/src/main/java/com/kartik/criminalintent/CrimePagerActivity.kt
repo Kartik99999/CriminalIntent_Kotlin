@@ -64,3 +64,11 @@ class CrimePagerActivity : AppCompatActivity() {
 *
 * So in short if less pages uses FragmentPagerAdapter it will take more memory but works good as no need to create Fragement again
 * But if too many fragments use FragmentStatePagerAdapter it will take less memory and create fragment as required*/
+
+/*When dealing with two fragments hosted by the same activity, you can borrow
+Fragment.onActivityResult(…) and call it directly on the target fragment to pass back data. It has
+exactly what you need:
+• a request code that matches the code passed into setTargetFragment(…) to tell the target what is
+returning the result
+• a result code to determine what action to take
+• an Intent that can have extra data*/
