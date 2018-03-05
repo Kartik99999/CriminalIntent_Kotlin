@@ -2,11 +2,10 @@ package com.kartik.criminalintent.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -19,8 +18,15 @@ import com.kartik.criminalintent.dataClass.Crime
 
 class CrimeListFragment : Fragment() {
     private lateinit var mCrimeRecyclerView: RecyclerView
+    private var subtitlesVisible = false
     private var mAdapter: CrimeAdapter? = null
     private var lastUpdatedPosition = -1
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null)
+            subtitlesVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE)
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,6 +45,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI() {
+        updateSubtitle()
         val crimeLab = CrimeLab[context!!]
         val crimes = crimeLab.crimes
 
@@ -101,4 +108,60 @@ class CrimeListFragment : Fragment() {
             startActivity(intent)
         }
     }
+
+    private fun updateSubtitle() {
+        val crimeLab = CrimeLab[activity!!]
+        val crimeCount = crimeLab.crimes.size
+        var subtitle: String? = getString(R.string.subtitle_format, crimeCount)
+        if (!subtitlesVisible) {
+            subtitle = null
+        }
+
+        val activity = activity as AppCompatActivity
+        activity.supportActionBar?.title = subtitle
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.fragment_crime_list, menu)
+        val subtitleItem = menu?.findItem(R.menu.fragment_crime_list)
+        if (subtitlesVisible) {
+            subtitleItem?.setTitle(R.string.hide_subtitle)
+        } else {
+            subtitleItem?.setTitle(R.string.show_subtitle)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.new_crime -> {
+            val crime = Crime()
+            CrimeLab[activity!!].addCrime(crime)
+            val intent = CrimePagerActivity.newIntent(activity!!, crime.id)
+            startActivity(intent)
+            true
+        }
+        R.id.show_subtitle -> {
+            subtitlesVisible = !subtitlesVisible
+            activity?.invalidateOptionsMenu()
+            updateSubtitle()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, subtitlesVisible)
+    }
+
+    companion object {
+        private const val SAVED_SUBTITLE_VISIBLE = "subtitle"
+    }
 }
+
+/*If no crime in recylcer view show some text which will help user to add more crimes to it
+* If crime is added then change accordingly*/
+
+/*Plural string resource pg 268 for 1 crime and 2.. crimes*/
+
+/*Delete crimes by going in CrimeFragment or use long press to delete it from zoo app*/
