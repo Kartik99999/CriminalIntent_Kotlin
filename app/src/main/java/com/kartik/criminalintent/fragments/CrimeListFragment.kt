@@ -11,7 +11,6 @@ import android.widget.TextView
 
 import com.bignerdranch.android.criminalintent.CrimeLab
 import com.kartik.criminalintent.CrimePagerActivity
-import com.kartik.criminalintent.CriminalActivity
 import com.kartik.criminalintent.R
 
 import com.kartik.criminalintent.dataClass.Crime
