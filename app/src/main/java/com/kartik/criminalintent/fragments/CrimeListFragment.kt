@@ -9,11 +9,12 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 
-import com.bignerdranch.android.criminalintent.CrimeLab
+
 import com.kartik.criminalintent.CrimePagerActivity
 import com.kartik.criminalintent.R
 
 import com.kartik.criminalintent.dataClass.Crime
+import com.kartik.criminalintent.dataClass.CrimeLab
 
 class CrimeListFragment : Fragment() {
     private lateinit var mCrimeRecyclerView: RecyclerView
@@ -32,7 +33,7 @@ class CrimeListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
 
         mCrimeRecyclerView = view.findViewById(R.id.crimeRecyclerView)
-        mCrimeRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mCrimeRecyclerView.layoutManager = LinearLayoutManager(this!!.activity)
         updateUI()
 
         return view
@@ -45,7 +46,7 @@ class CrimeListFragment : Fragment() {
 
     private fun updateUI() {
         updateSubtitle()
-        val crimeLab = CrimeLab[context!!]
+        val crimeLab = CrimeLab.get(context)
         val crimes = crimeLab.crimes
 
         if (mAdapter == null) {
@@ -109,7 +110,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateSubtitle() {
-        val crimeLab = CrimeLab[activity!!]
+        val crimeLab = CrimeLab.get(activity)
         val crimeCount = crimeLab.crimes.size
         var subtitle: String? = getString(R.string.subtitle_format, crimeCount)
         if (!subtitlesVisible) {
@@ -134,7 +135,7 @@ class CrimeListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.new_crime -> {
             val crime = Crime()
-            CrimeLab[activity!!].addCrime(crime)
+            CrimeLab.get(activity).addCrime(crime)
             val intent = CrimePagerActivity.newIntent(activity!!, crime.id)
             startActivity(intent)
             true

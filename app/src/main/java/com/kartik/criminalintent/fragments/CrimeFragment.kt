@@ -9,11 +9,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bignerdranch.android.criminalintent.CrimeLab
 import com.kartik.criminalintent.CriminalActivity
 import kotlinx.android.synthetic.main.fragment_crime.*
 import com.kartik.criminalintent.R
 import com.kartik.criminalintent.dataClass.Crime
+import com.kartik.criminalintent.dataClass.CrimeLab
 import java.util.*
 
 class CrimeFragment : Fragment() {
@@ -23,9 +23,14 @@ class CrimeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
         val crimeID = arguments?.getSerializable(ARG_CRIME_ID)
-        crime = CrimeLab[activity!!].getCrime(crimeID as UUID)!!
+        crime = CrimeLab.get(context!!).getCrime(crimeID as UUID)!!
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_crime, container, false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        CrimeLab.get(activity).updateCrime(crime)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

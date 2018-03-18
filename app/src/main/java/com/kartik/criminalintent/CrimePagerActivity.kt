@@ -7,8 +7,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import com.bignerdranch.android.criminalintent.CrimeLab
+import android.util.Log
 import com.kartik.criminalintent.dataClass.Crime
+import com.kartik.criminalintent.dataClass.CrimeLab
 import com.kartik.criminalintent.fragments.CrimeFragment
 import kotlinx.android.synthetic.main.activity_crime_pager.*
 import java.util.*
@@ -28,7 +29,7 @@ class CrimePagerActivity : AppCompatActivity() {
         //getItem(int). When your getItem(int) method is called for a position in your array of crimes, it
         //will return a CrimeFragment configured to display the crime at that position.
         val crimeID=intent.getSerializableExtra(EXTRA_CRIME_ID) as UUID
-        crimes = CrimeLab[this@CrimePagerActivity].crimes
+        crimes = CrimeLab.get(this@CrimePagerActivity).crimes
         val fm=supportFragmentManager
         viewPager.adapter= object : FragmentStatePagerAdapter(fm) {
             override fun getItem(position: Int): Fragment {
@@ -41,6 +42,7 @@ class CrimePagerActivity : AppCompatActivity() {
             }
         }
         for (i in 0..crimes.size) {
+            Log.i("From CrimePagerActivity","crimes size = ${crimes.size}")
             if (crimes[i].id == crimeID) {
                 viewPager.currentItem = i
                 break
